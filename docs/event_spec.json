@@ -1,0 +1,263 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Event Specification",
+    "description": "Event RESTful API Specification",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https"
+    }
+  ],
+  "paths": {
+    "/api/event":{
+      "get": {
+        "tags": ["Event"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "description": "Find All Available Events",
+        "summary": "Find all Event",
+        "responses": {
+          "200": {
+            "description": "Successfully get all Events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                      "type": ["array"],
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Event"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "description": "Create New Event",
+        "summary": "Create New Event",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventCreateOrUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Create New Event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Event"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/event/{eventId}":
+    {
+      "get": {
+        "tags": ["Event"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "description": "Find event by Id",
+        "summary": "Find event by Id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EventId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Get Event",
+            "content": {
+              "application/json":{
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Event"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "description": "Update Event By Id",
+        "summary": "Update Event",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EventId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventCreateOrUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully Update Event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code":{
+                      "type": ["string"]
+                    },
+                    "status":{
+                      "type": ["string"]
+                    },
+                    "data": {
+                     "$ref": "#/components/schemas/Event"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Event"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "description": "Delete Event By Id",
+        "summary": "Delete Event",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EventId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Event Successfully Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Auth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Authentication for Event API"
+      }
+    },
+    "parameters": {
+      "EventId": {
+        "in": "path",
+        "name": "eventId",
+        "description": "Id of an event"
+      }
+    },
+    "schemas": {
+      "EventCreateOrUpdate": {
+        "type": ["object"],
+        "properties": {
+            "name": {
+              "type": ["string"]
+            },
+            "description": {
+              "type": ["string"]
+            },
+            "start_time": {
+              "type": ["string"]
+            },
+            "end_time": {
+              "type": ["string"]
+            }
+        }
+      },
+      "Event": {
+        "type": ["object"],
+          "properties": {
+            "id": {
+              "type": ["integer"]
+            },
+            "name": {
+              "type": ["string"]
+            },
+            "description": {
+              "type": ["string"]
+            },
+            "start_time": {
+              "type": ["string"]
+            },
+            "end_time": {
+              "type": ["string"]
+            }
+        }
+      }
+    }
+  }
+}

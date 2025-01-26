@@ -11,8 +11,52 @@
     }
   ],
   "paths": {
-    "/api/admin/register": {
-
+    "/api/login": {
+      "post": {
+        "tags": ["Admin"],
+        "description": "Login as Admin To Access Endpoints",
+        "summary": "Login as Admin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": ["object"],
+                "properties": {
+                  "email": {
+                    "type": ["string"]
+                  },
+                  "password": {
+                    "type": ["string"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully Logged In as Admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "token": {
+                      "type": ["string"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

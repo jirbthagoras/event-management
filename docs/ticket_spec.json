@@ -1,0 +1,221 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ticket Specification",
+    "description": "Ticket RESTful API Specification",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https"
+    }
+  ],
+  "paths": {
+    "/api/ticket": {
+      "get": {
+        "description": "Find All Ticket",
+        "summary": "Find All",
+        "tags": ["Ticket"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Find All Tickets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                      "type": ["array"],
+                      "items": {
+                        "$ref": "#/components/schemas/Ticket"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create New Ticket",
+        "summary": "Create New",
+        "tags": ["Ticket"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TicketCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Create Tickets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Ticket"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ticket/{ticketId}": {
+      "get": {
+        "description": "Find Ticket By Id",
+        "summary": "Find By Id",
+        "tags": ["Ticket"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TicketId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Find Tickets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Ticket"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ticket/{ticketId}/cancel": {
+      "put": {
+        "description": "Cancel Ticket",
+        "summary": "Cancel",
+        "tags": ["Ticket"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TicketId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TicketCreate": {
+        "type": ["object"],
+        "properties": {
+          "event_id": {
+            "type": ["string"]
+          },
+          "user_id": {
+            "type": ["string"]
+          },
+          "status": {
+            "type": ["string"]
+          }
+        }
+      },
+      "Ticket": {
+        "type": ["object"],
+        "properties": {
+          "id": {
+            "type": ["string"]
+          },
+          "event_id": {
+            "type": ["string"]
+          },
+          "user_id": {
+            "type": ["string"]
+          },
+          "status": {
+            "type": ["string"]
+          }
+        }
+      }
+    },
+    "parameters": {
+      "TicketId": {
+        "in": "path",
+        "name": "ticketId",
+        "description": "The Id of A Ticket"
+      }
+    },
+    "securitySchemes": {
+      "Auth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Authentication for Event API"
+      }
+    }
+  }
+}

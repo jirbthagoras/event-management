@@ -1,0 +1,264 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Attendee Specification",
+    "description": "Attendee RESTful API Specification",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https"
+    }
+  ],
+  "paths": {
+    "/api/attendee":
+    {
+      "get": {
+        "description": "Find All Attendee",
+        "summary": "Find All Attendee",
+        "tags": ["Attendee"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Find All Attendees",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                      "type": ["array"],
+                      "items": {
+                        "$ref": "#/components/schemas/Attendee"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Register New Attendee",
+        "summary": "Register Attendee",
+        "tags": ["Attendee"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json":
+            {
+              "schema": {
+                "$ref": "#/components/schemas/AttendeeCreateOrUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Registered Attendee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Attendee"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/attendee/{attendeeId}": {
+      "get": {
+        "description": "Find Attendee By Id",
+        "summary": "Find By Id",
+        "tags": ["Attendee"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttendeeId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully Find Specific Attendee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Attendee"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update Attendee Data",
+        "summary": "Update Attendee",
+        "tags": ["Attendee"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttendeeId"
+          }
+        ],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttendeeCreateOrUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully Update Data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Attendee"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete Attendee By Id",
+        "summary": "Delete By Id",
+        "tags": ["Attendee"],
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttendeeId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully Deletes Attendee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": ["object"],
+                  "properties": {
+                    "code": {
+                      "type": ["string"]
+                    },
+                    "status": {
+                      "type": ["string"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Auth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Authentication for Event API"
+      }
+    },
+    "parameters": {
+      "AttendeeId": {
+        "in": "path",
+        "name": "attendeeId",
+        "description": "The Id Of Attendee"
+      }
+    },
+    "schemas": {
+      "Attendee": {
+        "type": ["object"],
+        "properties": {
+          "id": {
+            "type": ["integer"]
+          },
+          "name": {
+            "type": ["string"]
+          },
+          "email": {
+            "type": ["string"]
+          }
+        }
+      },
+      "AttendeeCreateOrUpdate": {
+        "type": ["object"],
+        "properties": {
+          "name": {
+            "type": ["string"]
+          },
+          "email": {
+            "type": ["string"]
+          }
+        }
+      }
+    }
+  }
+}
