@@ -176,7 +176,7 @@
           "event_id": {
             "type": ["string"]
           },
-          "user_id": {
+          "attendee_id": {
             "type": ["string"]
           },
           "status": {
@@ -190,11 +190,27 @@
           "id": {
             "type": ["string"]
           },
-          "event_id": {
-            "type": ["string"]
+          "event ": {
+            "type": ["object"],
+            "properties": {
+              "name": {
+                "type": ["string"]
+              },
+              "description": {
+                "type": ["string"]
+              }
+            }
           },
-          "user_id": {
-            "type": ["string"]
+          "attendee": {
+            "type": ["object"],
+            "properties": {
+              "name": {
+                "type": ["string"]
+              },
+              "email": {
+                "type": ["string"]
+              }
+            }
           },
           "status": {
             "type": ["string"]
