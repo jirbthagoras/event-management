@@ -1,0 +1,21 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Admin Specification",
+    "description": "Admin RESTful API Specification",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https"
+    }
+  ],
+  "paths": {
+    "/api/admin/register": {
+
+    }
+  },
+  "components": {
+
+  }
+}
