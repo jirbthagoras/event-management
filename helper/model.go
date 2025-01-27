@@ -10,3 +10,11 @@ func ToAdminResponse(admin model.Admin) *web.AdminResponse {
 		Token: admin.Token,
 	}
 }
+
+func CreateWebResponse(code int, status string, data interface{}) *web.GlobalResponse {
+	return &web.GlobalResponse{
+		Code:   code,
+		Status: status,
+		Data:   data,
+	}
+}

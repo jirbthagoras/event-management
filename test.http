@@ -1,0 +1,10 @@
+### GET request to example server
+POST http://localhost:3000/api/admin/login
+Content-Type: application/json
+
+{
+  "email": "admin@admin.com",
+  "password": "admin"
+}
+
+###

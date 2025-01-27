@@ -5,7 +5,7 @@ type AdminResponse struct {
 }
 
 type GlobalResponse struct {
-	Code   string      `json:"code"`
+	Code   int         `json:"code"`
 	Status string      `json:"status"`
 	Data   interface{} `json:"data"`
 }

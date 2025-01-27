@@ -5,4 +5,4 @@ CREATE TABLE admin (
     token VARCHAR(36) NOT NULL DEFAULT (UUID())
 );
 
-INSERT INTO admin(email, password) VALUES('admin', 'admin')
+INSERT INTO admin(email, password) VALUES('admin@admin.com', 'admin')

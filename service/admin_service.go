@@ -25,7 +25,7 @@ func NewAdminServiceImpl(adminRepository repository.AdminRepository, DB *sql.DB,
 }
 
 func (service AdminServiceImpl) Login(ctx context.Context, request *web.AdminLoginRequest) *web.AdminResponse {
-	err := service.Validator.StructCtx(ctx, &request)
+	err := service.Validator.StructCtx(ctx, request)
 	helper.PanicIfError(err)
 
 	tx, err := service.DB.Begin()
