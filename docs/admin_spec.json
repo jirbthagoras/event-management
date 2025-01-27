@@ -47,8 +47,13 @@
                     "status": {
                       "type": ["string"]
                     },
-                    "token": {
-                      "type": ["string"]
+                    "data": {
+                      "type": ["object"],
+                      "properties": {
+                        "token": {
+                          "type": ["string"]
+                        }
+                      }
                     }
                   }
                 }
