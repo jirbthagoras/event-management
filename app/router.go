@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/julienschmidt/httprouter"
 	"jirbthagoras/event-management/controller"
+	"jirbthagoras/event-management/exception"
 )
 
 type Controllers struct {
@@ -16,6 +17,8 @@ func NewControllers(adminController controller.AdminController) *Controllers {
 func NewRouter(controllers *Controllers) *httprouter.Router {
 	router := httprouter.New()
 	registerAdminRoute(router, controllers.AdminController)
+
+	router.PanicHandler = exception.ErrorHandler
 
 	return router
 }

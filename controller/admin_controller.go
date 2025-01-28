@@ -22,7 +22,7 @@ func (controller AdminControllerImpl) Login(writer http.ResponseWriter, request 
 
 	var adminResponse *web.AdminResponse = controller.AdminService.Login(request.Context(), &adminLoginRequest)
 
-	helper.WriteResponseToBody(writer, helper.CreateWebResponse(http.StatusOK, "Login Successfull", adminResponse))
+	helper.WriteResponseToBody(writer, http.StatusOK, helper.CreateWebResponse("SUCCESS", adminResponse))
 }
 
 func NewAdminControllerImpl(adminService service.AdminService) *AdminControllerImpl {

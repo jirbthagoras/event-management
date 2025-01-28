@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"jirbthagoras/event-management/domain/model"
+	"jirbthagoras/event-management/exception"
 	"jirbthagoras/event-management/helper"
 )
 
@@ -25,9 +26,10 @@ func (repository AdminRepositoryImpl) FindByToken(ctx context.Context, tx *sql.T
 	query := "SELECT id FROM admin WHERE token = ?"
 	rows, err := tx.QueryContext(ctx, query, token)
 	defer rows.Close()
-	helper.PanicIfError(err)
-
 	admin := model.Admin{}
+	if err != nil {
+		return admin, err
+	}
 
 	if rows.Next() {
 		err := rows.Scan(&admin.Id)
@@ -42,16 +44,18 @@ func (repository AdminRepositoryImpl) FindByToken(ctx context.Context, tx *sql.T
 func (repository AdminRepositoryImpl) FindByEmail(ctx context.Context, tx *sql.Tx, email string) (model.Admin, error) {
 	query := "SELECT id, email, password, token FROM admin WHERE email = ?"
 	rows, err := tx.QueryContext(ctx, query, email)
-	defer rows.Close()
-	helper.PanicIfError(err)
-
 	admin := model.Admin{}
+
+	defer rows.Close()
+	if err != nil {
+		return admin, err
+	}
 
 	if rows.Next() {
 		err := rows.Scan(&admin.Id, &admin.Email, &admin.Password, &admin.Token)
 		helper.PanicIfError(err)
 	} else {
-		return admin, errors.New("not found")
+		return admin, exception.NewNotFoundError("Account Not Found")
 	}
 
 	return admin, nil
@@ -60,7 +64,5 @@ func (repository AdminRepositoryImpl) FindByEmail(ctx context.Context, tx *sql.T
 func (repository AdminRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, admin model.Admin) error {
 	query := "UPDATE admin SET token = ?, email = ?, password = ? WHERE id = ?"
 	_, err := tx.ExecContext(ctx, query, admin.Token, admin.Email, admin.Password, admin.Id)
-	helper.PanicIfError(err)
-
-	return nil
+	return err
 }

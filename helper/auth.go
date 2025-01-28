@@ -6,8 +6,7 @@ import (
 
 func ComparePassword(password string, requestPassword string) error {
 	if password != requestPassword {
-		return errors.New("password not match")
+		return errors.New("password did not not match")
 	}
-
 	return nil
 }
