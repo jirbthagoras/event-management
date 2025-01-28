@@ -11,6 +11,16 @@ func ToAdminResponse(admin model.Admin) *web.AdminResponse {
 	}
 }
 
+func ToEventResponse(event *model.Event) *web.EventResponse {
+	return &web.EventResponse{
+		Id:          event.Id,
+		Name:        event.Name,
+		Description: event.Description,
+		StartTime:   event.StartTime,
+		EndTime:     event.EndTime,
+	}
+}
+
 func CreateWebResponse(status string, data interface{}) *web.GlobalResponse {
 	return &web.GlobalResponse{
 		Status: status,
