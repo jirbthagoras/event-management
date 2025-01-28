@@ -31,6 +31,15 @@ var eventControllerSet = wire.NewSet(
 	wire.Bind(new(controller.EventController), new(*controller.EventControllerImpl)),
 )
 
+var attendeeControllerSet = wire.NewSet(
+	repository.NewAttendeeRepositoryImpl,
+	wire.Bind(new(repository.AttendeeRepository), new(*repository.AttendeeRepositoryImpl)),
+	service.NewAttendeeServiceImpl,
+	wire.Bind(new(service.AttendeeService), new(*service.AttendeeServiceImpl)),
+	controller.NewAttendeeControllerImpl,
+	wire.Bind(new(controller.AttendeeController), new(*controller.AttendeeControllerImpl)),
+)
+
 func InitializedServer() *http.Server {
 	wire.Build(
 		app.NewDB,
@@ -38,6 +47,7 @@ func InitializedServer() *http.Server {
 		app.NewServer,
 		adminControllerSet,
 		eventControllerSet,
+		attendeeControllerSet,
 		middleware.NewAuthMiddleware,
 		app.NewControllers,
 		app.NewRouter,

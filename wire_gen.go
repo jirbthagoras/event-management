@@ -27,7 +27,10 @@ func InitializedServer() *http.Server {
 	eventRepositoryImpl := repository.NewEventRepositoryImpl()
 	eventServiceImpl := service.NewEventServiceImpl(eventRepositoryImpl, validate, db)
 	eventControllerImpl := controller.NewEventControllerImpl(eventServiceImpl)
-	controllers := app.NewControllers(adminControllerImpl, eventControllerImpl)
+	attendeeRepositoryImpl := repository.NewAttendeeRepositoryImpl()
+	attendeeServiceImpl := service.NewAttendeeServiceImpl(db, validate, attendeeRepositoryImpl)
+	attendeeControllerImpl := controller.NewAttendeeControllerImpl(attendeeServiceImpl)
+	controllers := app.NewControllers(adminControllerImpl, eventControllerImpl, attendeeControllerImpl)
 	authMiddleware := middleware.NewAuthMiddleware(db, adminRepositoryImpl)
 	router := app.NewRouter(controllers, authMiddleware)
 	server := app.NewServer(router)
@@ -39,3 +42,5 @@ func InitializedServer() *http.Server {
 var adminControllerSet = wire.NewSet(repository.NewAdminRepositoryImpl, wire.Bind(new(repository.AdminRepository), new(*repository.AdminRepositoryImpl)), service.NewAdminServiceImpl, wire.Bind(new(service.AdminService), new(*service.AdminServiceImpl)), controller.NewAdminControllerImpl, wire.Bind(new(controller.AdminController), new(*controller.AdminControllerImpl)))
 
 var eventControllerSet = wire.NewSet(repository.NewEventRepositoryImpl, wire.Bind(new(repository.EventRepository), new(*repository.EventRepositoryImpl)), service.NewEventServiceImpl, wire.Bind(new(service.EventService), new(*service.EventServiceImpl)), controller.NewEventControllerImpl, wire.Bind(new(controller.EventController), new(*controller.EventControllerImpl)))
+
+var attendeeControllerSet = wire.NewSet(repository.NewAttendeeRepositoryImpl, wire.Bind(new(repository.AttendeeRepository), new(*repository.AttendeeRepositoryImpl)), service.NewAttendeeServiceImpl, wire.Bind(new(service.AttendeeService), new(*service.AttendeeServiceImpl)), controller.NewAttendeeControllerImpl, wire.Bind(new(controller.AttendeeController), new(*controller.AttendeeControllerImpl)))

@@ -12,3 +12,9 @@ type EventRequest struct {
 	StartTime   string `json:"start_time" validate:"required"`
 	EndTime     string `json:"end_time" validate:"required"`
 }
+
+type AttendeeRequest struct {
+	Id    int
+	Name  string `json:"name" validate:"required"`
+	Email string `json:"email" validate:"required,email"`
+}

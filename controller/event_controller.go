@@ -35,7 +35,7 @@ func (controller EventControllerImpl) Create(writer http.ResponseWriter, request
 }
 
 func (controller EventControllerImpl) Update(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
-	categoryId := param.ByName("categoryId")
+	categoryId := param.ByName("eventId")
 	id, err := strconv.Atoi(categoryId)
 	helper.PanicIfError(err)
 
@@ -49,7 +49,7 @@ func (controller EventControllerImpl) Update(writer http.ResponseWriter, request
 }
 
 func (controller EventControllerImpl) FindById(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
-	categoryId := param.ByName("categoryId")
+	categoryId := param.ByName("eventId")
 	id, err := strconv.Atoi(categoryId)
 	helper.PanicIfError(err)
 
@@ -65,7 +65,7 @@ func (controller EventControllerImpl) FindAll(writer http.ResponseWriter, reques
 }
 
 func (controller EventControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
-	categoryId := param.ByName("categoryId")
+	categoryId := param.ByName("eventId")
 	id, err := strconv.Atoi(categoryId)
 	helper.PanicIfError(err)
 

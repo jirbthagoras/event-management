@@ -22,13 +22,31 @@ func ToEventResponse(event *model.Event) *web.EventResponse {
 }
 
 func ToEventResponses(events []*model.Event) []*web.EventResponse {
-	var categoryResponses []*web.EventResponse
+	var eventResponses []*web.EventResponse
 
 	for _, event := range events {
-		categoryResponses = append(categoryResponses, ToEventResponse(event))
+		eventResponses = append(eventResponses, ToEventResponse(event))
 	}
 
-	return categoryResponses
+	return eventResponses
+}
+
+func ToAttendeeResponse(attendee *model.Attendee) *web.AttendeeResponse {
+	return &web.AttendeeResponse{
+		Id:    attendee.Id,
+		Name:  attendee.Name,
+		Email: attendee.Email,
+	}
+}
+
+func ToAttendeeResponses(attendees []*model.Attendee) []*web.AttendeeResponse {
+	var attendeeResponses []*web.AttendeeResponse
+
+	for _, attendee := range attendees {
+		attendeeResponses = append(attendeeResponses, ToAttendeeResponse(attendee))
+	}
+
+	return attendeeResponses
 }
 
 func CreateWebResponse(status string, data interface{}) *web.GlobalResponse {
