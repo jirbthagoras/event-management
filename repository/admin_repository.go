@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"jirbthagoras/event-management/domain/model"
 	"jirbthagoras/event-management/exception"
 )
@@ -34,7 +33,7 @@ func (repository AdminRepositoryImpl) FindByToken(ctx context.Context, tx *sql.T
 		err := rows.Scan(&admin.Id)
 		return admin, err
 	} else {
-		return admin, errors.New("not found")
+		return admin, exception.NewNotFoundError("Admin Not Found")
 	}
 }
 

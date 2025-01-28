@@ -32,6 +32,26 @@ func NewNotFoundError(msg string) *NotFoundError {
 	return &NotFoundError{Msg: msg}
 }
 
+type AuthenticationError struct {
+	Msg string
+}
+
+func NewAuthenticationError(msg string) *AuthenticationError {
+	return &AuthenticationError{Msg: msg}
+}
+
+func (a AuthenticationError) Error() string {
+	return a.Msg
+}
+
+func (a AuthenticationError) GetStatus() string {
+	return "AUTHENTICATION ERROR"
+}
+
+func (a AuthenticationError) GetCode() int {
+	return http.StatusUnauthorized
+}
+
 type ValidationError struct {
 	Errors map[string]interface{}
 }

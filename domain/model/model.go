@@ -24,8 +24,8 @@ type Attendee struct {
 }
 
 type Ticket struct {
-	Id      int    `json:"id"`
-	EventId int    `json:"event_id"`
-	UserId  int    `json:"user_id"`
-	Status  string `json:"status"`
+	Id      int
+	EventId int
+	UserId  int
+	Status  string
 }

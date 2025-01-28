@@ -10,6 +10,7 @@ import (
 	"github.com/google/wire"
 	"jirbthagoras/event-management/app"
 	"jirbthagoras/event-management/controller"
+	"jirbthagoras/event-management/middleware"
 	"jirbthagoras/event-management/repository"
 	"jirbthagoras/event-management/service"
 	"net/http"
@@ -27,7 +28,8 @@ func InitializedServer() *http.Server {
 	eventServiceImpl := service.NewEventServiceImpl(eventRepositoryImpl, validate, db)
 	eventControllerImpl := controller.NewEventControllerImpl(eventServiceImpl)
 	controllers := app.NewControllers(adminControllerImpl, eventControllerImpl)
-	router := app.NewRouter(controllers)
+	authMiddleware := middleware.NewAuthMiddleware(db, adminRepositoryImpl)
+	router := app.NewRouter(controllers, authMiddleware)
 	server := app.NewServer(router)
 	return server
 }

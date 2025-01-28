@@ -44,21 +44,10 @@ func (e EventRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, event *model.
 
 func (e EventRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, event *model.Event) (*model.Event, error) {
 	query := "UPDATE events SET name = ?, description = ?, start_time = ?, end_time = ? WHERE id = ?"
-	result, err := tx.ExecContext(ctx, query, event.Name, event.Description, event.StartTime, event.EndTime, event.Id)
-
-	rowsAffected, err := result.RowsAffected()
+	_, err := tx.ExecContext(ctx, query, event.Name, event.Description, event.StartTime, event.EndTime, event.Id)
 	if err != nil {
 		return nil, err
 	}
-
-	if rowsAffected == 0 {
-		log.Fatal("No rows were updated. Ensure the ID exists.")
-		//return nil, fmt.Errorf("no rows updated, event with ID=%d may not exist", event.Id)
-	}
-
-	//if err != nil {
-	//	return nil, err
-	//}
 	return event, nil
 }
 

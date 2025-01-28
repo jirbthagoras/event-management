@@ -3,13 +3,14 @@ POST http://localhost:3000/api/admin/login
 Content-Type: application/json
 
 {
-  "email": "aadmin.com",
-  "password": ""
+  "email": "admin@admin.com",
+  "password": "admin"
 }
 
 ### POST create event
 POST http://localhost:3000/api/event
 Content-Type: application/json
+X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
 
 {
   "name": "dddddd",
@@ -18,17 +19,21 @@ Content-Type: application/json
   "end_time": "2025-01-02"
 }
 
+
 ### GET find by all
 GET http://localhost:3000/api/event
 ACCEPT: application/json
+X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
 
 ### GET find by id
-GET http://localhost:3000/api/event/4
+GET http://localhost:3000/api/event/7
 ACCEPT: application/json
+X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
 
 ### PUT update certain row
-PUT http://localhost:3000/api/event/3
+PUT http://localhost:3000/api/event/7
 Content-Type: application/json
+X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
 
 {
   "name": "terbaruk",
@@ -38,5 +43,6 @@ Content-Type: application/json
 }
 
 ### DELETE by id
-DELETE http://localhost:3000/api/event/6
+DELETE http://localhost:3000/api/event/7
 Accept: application/json
+X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
