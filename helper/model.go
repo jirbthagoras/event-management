@@ -21,6 +21,16 @@ func ToEventResponse(event *model.Event) *web.EventResponse {
 	}
 }
 
+func ToEventResponses(events []*model.Event) []*web.EventResponse {
+	var categoryResponses []*web.EventResponse
+
+	for _, event := range events {
+		categoryResponses = append(categoryResponses, ToEventResponse(event))
+	}
+
+	return categoryResponses
+}
+
 func CreateWebResponse(status string, data interface{}) *web.GlobalResponse {
 	return &web.GlobalResponse{
 		Status: status,

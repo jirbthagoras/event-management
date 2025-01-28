@@ -26,8 +26,11 @@ type EventServiceImpl struct {
 	DB              *sql.DB
 }
 
+func NewEventServiceImpl(eventRepository repository.EventRepository, validator *validator.Validate, DB *sql.DB) *EventServiceImpl {
+	return &EventServiceImpl{EventRepository: eventRepository, Validator: validator, DB: DB}
+}
+
 func (service EventServiceImpl) Create(ctx context.Context, request *web.EventRequest) *web.EventResponse {
-	// Validate the request
 	err := service.Validator.StructCtx(ctx, request)
 	exception.PanicIfValidationErr(err)
 
@@ -54,25 +57,61 @@ func (service EventServiceImpl) Create(ctx context.Context, request *web.EventRe
 }
 
 func (service EventServiceImpl) Update(ctx context.Context, request *web.EventRequest) *web.EventResponse {
-	//TODO implement me
-	panic("implement me")
+	err := service.Validator.StructCtx(ctx, request)
+	exception.PanicIfValidationErr(err)
+
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	event, err := service.EventRepository.FindById(ctx, tx, request.Id)
+	helper.PanicIfError(err)
+
+	_, err = service.EventRepository.Update(ctx, tx, event)
+	helper.PanicIfError(err)
+
+	return helper.ToEventResponse(event)
 }
 
 func (service EventServiceImpl) FindById(ctx context.Context, request *web.EventRequest) *web.EventResponse {
-	//TODO implement me
-	panic("implement me")
+	err := service.Validator.StructCtx(ctx, request)
+	exception.PanicIfValidationErr(err)
+
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	event, err := service.EventRepository.FindById(ctx, tx, request.Id)
+	helper.PanicIfError(err)
+
+	return helper.ToEventResponse(event)
 }
 
 func (service EventServiceImpl) FindAll(ctx context.Context, request *web.EventRequest) []*web.EventResponse {
-	//TODO implement me
-	panic("implement me")
+	err := service.Validator.StructCtx(ctx, request)
+	exception.PanicIfValidationErr(err)
+
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	event, err := service.EventRepository.FindAll(ctx, tx)
+	helper.PanicIfError(err)
+
+	return helper.ToEventResponses(event)
 }
 
 func (service EventServiceImpl) DeleteById(ctx context.Context, request *web.EventRequest) {
-	//TODO implement me
-	panic("implement me")
-}
+	err := service.Validator.StructCtx(ctx, request)
+	exception.PanicIfValidationErr(err)
 
-func NewEventServiceImpl(eventRepository *repository.EventRepository, validator *validator.Validate, DB *sql.DB) *EventServiceImpl {
-	return &EventServiceImpl{EventRepository: eventRepository, Validator: validator, DB: DB}
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	event, err := service.EventRepository.FindById(ctx, tx, request.Id)
+	helper.PanicIfError(err)
+
+	err = service.EventRepository.Delete(ctx, tx, event.Id)
+	helper.PanicIfError(err)
 }

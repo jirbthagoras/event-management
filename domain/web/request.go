@@ -6,6 +6,7 @@ type AdminLoginRequest struct {
 }
 
 type EventRequest struct {
+	Id          int    `json:"id" validate:"required,gte=1"`
 	Name        string `json:"category" validate:"required"`
 	Description string `json:"description" validate:"required"`
 	StartTime   string `json:"start_time" validate:"required"`
