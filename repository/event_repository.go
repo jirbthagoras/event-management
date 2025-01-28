@@ -3,8 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"jirbthagoras/event-management/domain/model"
 	"jirbthagoras/event-management/exception"
+	"log"
 )
 
 type EventRepository interface {
@@ -42,10 +44,21 @@ func (e EventRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, event *model.
 
 func (e EventRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, event *model.Event) (*model.Event, error) {
 	query := "UPDATE events SET name = ?, description = ?, start_time = ?, end_time = ? WHERE id = ?"
-	_, err := tx.ExecContext(ctx, query, event.Name, event.Description, event.StartTime, event.EndTime, event.Id)
+	result, err := tx.ExecContext(ctx, query, event.Name, event.Description, event.StartTime, event.EndTime, event.Id)
+
+	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		return nil, err
 	}
+
+	if rowsAffected == 0 {
+		log.Fatal("No rows were updated. Ensure the ID exists.")
+		//return nil, fmt.Errorf("no rows updated, event with ID=%d may not exist", event.Id)
+	}
+
+	//if err != nil {
+	//	return nil, err
+	//}
 	return event, nil
 }
 
@@ -79,7 +92,7 @@ func (e EventRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) (
 }
 
 func (e EventRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) ([]*model.Event, error) {
-	query := "SELECT id, name, description, start_time, end_time FROM events"
+	query := "SELECT * FROM events"
 	rows, err := tx.QueryContext(ctx, query)
 	defer rows.Close()
 	if err != nil {
@@ -90,12 +103,13 @@ func (e EventRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) ([]*model.
 
 	for rows.Next() {
 		event := model.Event{}
-		err := rows.Scan(&event.Id, &event.Name, &event.Description, &event.StartTime, &event.EndTime)
+		fmt.Println("hay")
+		err = rows.Scan(&event.Id, &event.Name, &event.Description, &event.StartTime, &event.EndTime)
 		if err != nil {
 			return nil, err
 		}
+		log.Println(event)
 		events = append(events, &event)
-		return events, nil
 	}
 
 	return events, nil

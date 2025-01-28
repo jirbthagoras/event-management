@@ -23,7 +23,10 @@ func InitializedServer() *http.Server {
 	validate := app.NewValidator()
 	adminServiceImpl := service.NewAdminServiceImpl(adminRepositoryImpl, db, validate)
 	adminControllerImpl := controller.NewAdminControllerImpl(adminServiceImpl)
-	controllers := app.NewControllers(adminControllerImpl)
+	eventRepositoryImpl := repository.NewEventRepositoryImpl()
+	eventServiceImpl := service.NewEventServiceImpl(eventRepositoryImpl, validate, db)
+	eventControllerImpl := controller.NewEventControllerImpl(eventServiceImpl)
+	controllers := app.NewControllers(adminControllerImpl, eventControllerImpl)
 	router := app.NewRouter(controllers)
 	server := app.NewServer(router)
 	return server
@@ -32,3 +35,5 @@ func InitializedServer() *http.Server {
 // injector.go:
 
 var adminControllerSet = wire.NewSet(repository.NewAdminRepositoryImpl, wire.Bind(new(repository.AdminRepository), new(*repository.AdminRepositoryImpl)), service.NewAdminServiceImpl, wire.Bind(new(service.AdminService), new(*service.AdminServiceImpl)), controller.NewAdminControllerImpl, wire.Bind(new(controller.AdminController), new(*controller.AdminControllerImpl)))
+
+var eventControllerSet = wire.NewSet(repository.NewEventRepositoryImpl, wire.Bind(new(repository.EventRepository), new(*repository.EventRepositoryImpl)), service.NewEventServiceImpl, wire.Bind(new(service.EventService), new(*service.EventServiceImpl)), controller.NewEventControllerImpl, wire.Bind(new(controller.EventController), new(*controller.EventControllerImpl)))

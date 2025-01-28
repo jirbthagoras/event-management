@@ -7,4 +7,36 @@ Content-Type: application/json
   "password": ""
 }
 
-###
+### POST create event
+POST http://localhost:3000/api/event
+Content-Type: application/json
+
+{
+  "name": "dddddd",
+  "description": "Ya sdd",
+  "start_time": "2025-01-01",
+  "end_time": "2025-01-02"
+}
+
+### GET find by all
+GET http://localhost:3000/api/event
+ACCEPT: application/json
+
+### GET find by id
+GET http://localhost:3000/api/event/4
+ACCEPT: application/json
+
+### PUT update certain row
+PUT http://localhost:3000/api/event/3
+Content-Type: application/json
+
+{
+  "name": "terbaruk",
+  "description": "kcoak",
+  "start_time": "2025-01-01",
+  "end_time": "2025-01-02"
+}
+
+### DELETE by id
+DELETE http://localhost:3000/api/event/6
+Accept: application/json

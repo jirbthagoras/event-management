@@ -21,12 +21,22 @@ var adminControllerSet = wire.NewSet(
 	wire.Bind(new(controller.AdminController), new(*controller.AdminControllerImpl)),
 )
 
+var eventControllerSet = wire.NewSet(
+	repository.NewEventRepositoryImpl,
+	wire.Bind(new(repository.EventRepository), new(*repository.EventRepositoryImpl)),
+	service.NewEventServiceImpl,
+	wire.Bind(new(service.EventService), new(*service.EventServiceImpl)),
+	controller.NewEventControllerImpl,
+	wire.Bind(new(controller.EventController), new(*controller.EventControllerImpl)),
+)
+
 func InitializedServer() *http.Server {
 	wire.Build(
 		app.NewDB,
 		app.NewValidator,
 		app.NewServer,
 		adminControllerSet,
+		eventControllerSet,
 		app.NewControllers,
 		app.NewRouter,
 	)
