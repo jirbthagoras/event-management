@@ -3,8 +3,8 @@ POST http://localhost:3000/api/admin/login
 Content-Type: application/json
 
 {
-  "email": "lah@admin.com",
-  "password": "admin"
+  "email": "aadmin.com",
+  "password": ""
 }
 
 ###

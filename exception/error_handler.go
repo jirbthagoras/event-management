@@ -8,19 +8,33 @@ import (
 )
 
 func ErrorHandler(writer http.ResponseWriter, request *http.Request, err interface{}) {
+	var validationError *ValidationError
+	if errors.As(err.(error), &validationError) {
+		launchValidationError(writer, *validationError)
+		return
+	}
 
 	var appError AppError
 	if errors.As(err.(error), &appError) {
 		launchCustomError(writer, appError)
-	} else {
-		launchInternalError(writer, err.(error))
+		return
 	}
+
+	launchInternalError(writer, err.(error))
 }
 
 func launchCustomError(writer http.ResponseWriter, err AppError) {
 	globalResponse := &web.GlobalResponse{
 		Status: err.GetStatus(),
 		Errors: err.Error(),
+	}
+	helper.WriteResponseToBody(writer, err.GetCode(), globalResponse)
+}
+
+func launchValidationError(writer http.ResponseWriter, err ValidationError) {
+	globalResponse := &web.GlobalResponse{
+		Status: err.GetStatus(),
+		Errors: err.Errors,
 	}
 	helper.WriteResponseToBody(writer, err.GetCode(), globalResponse)
 }

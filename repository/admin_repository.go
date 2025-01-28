@@ -6,7 +6,6 @@ import (
 	"errors"
 	"jirbthagoras/event-management/domain/model"
 	"jirbthagoras/event-management/exception"
-	"jirbthagoras/event-management/helper"
 )
 
 type AdminRepository interface {
@@ -33,12 +32,10 @@ func (repository AdminRepositoryImpl) FindByToken(ctx context.Context, tx *sql.T
 
 	if rows.Next() {
 		err := rows.Scan(&admin.Id)
-		helper.PanicIfError(err)
+		return admin, err
 	} else {
 		return admin, errors.New("not found")
 	}
-
-	return admin, nil
 }
 
 func (repository AdminRepositoryImpl) FindByEmail(ctx context.Context, tx *sql.Tx, email string) (model.Admin, error) {
@@ -53,12 +50,10 @@ func (repository AdminRepositoryImpl) FindByEmail(ctx context.Context, tx *sql.T
 
 	if rows.Next() {
 		err := rows.Scan(&admin.Id, &admin.Email, &admin.Password, &admin.Token)
-		helper.PanicIfError(err)
+		return admin, err
 	} else {
 		return admin, exception.NewNotFoundError("Account Not Found")
 	}
-
-	return admin, nil
 }
 
 func (repository AdminRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, admin model.Admin) error {

@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"jirbthagoras/event-management/domain/web"
+	"jirbthagoras/event-management/exception"
 	"jirbthagoras/event-management/helper"
 	"jirbthagoras/event-management/repository"
 )
@@ -26,7 +27,7 @@ func NewAdminServiceImpl(adminRepository repository.AdminRepository, DB *sql.DB,
 
 func (service AdminServiceImpl) Login(ctx context.Context, request *web.AdminLoginRequest) *web.AdminResponse {
 	err := service.Validator.StructCtx(ctx, request)
-	helper.PanicIfError(err)
+	exception.PanicIfValidationErr(err)
 
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
