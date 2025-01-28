@@ -11,7 +11,7 @@ import (
 type AdminRepository interface {
 	FindByToken(ctx context.Context, tx *sql.Tx, token string) (model.Admin, error)
 	FindByEmail(ctx context.Context, tx *sql.Tx, email string) (model.Admin, error)
-	Update(ctx context.Context, tx *sql.Tx, admin model.Admin) error
+	Update(ctx context.Context, tx *sql.Tx, admin model.Admin) (model.Admin, error)
 }
 
 type AdminRepositoryImpl struct {
@@ -56,8 +56,8 @@ func (repository AdminRepositoryImpl) FindByEmail(ctx context.Context, tx *sql.T
 	}
 }
 
-func (repository AdminRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, admin model.Admin) error {
+func (repository AdminRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, admin model.Admin) (model.Admin, error) {
 	query := "UPDATE admin SET token = ?, email = ?, password = ? WHERE id = ?"
 	_, err := tx.ExecContext(ctx, query, admin.Token, admin.Email, admin.Password, admin.Id)
-	return err
+	return admin, err
 }

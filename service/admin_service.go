@@ -41,7 +41,7 @@ func (service AdminServiceImpl) Login(ctx context.Context, request *web.AdminLog
 
 	admin.Token = uuid.NewString()
 
-	err = service.AdminRepository.Update(ctx, tx, admin)
+	_, err = service.AdminRepository.Update(ctx, tx, admin)
 	helper.PanicIfError(err)
 
 	return helper.ToAdminResponse(admin)
