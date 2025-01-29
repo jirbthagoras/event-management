@@ -3,15 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"jirbthagoras/event-management/domain/model"
 	"jirbthagoras/event-management/exception"
 )
 
 type TicketRepository interface {
-	Save(ctx context.Context, tx *sql.DB, ticket *model.Ticket) (*model.Ticket, error)
-	FindById(ctx context.Context, tx *sql.DB, id int) (*model.Ticket, error)
-	Update(ctx context.Context, tx *sql.DB, ticket *model.Ticket) (*model.Ticket, error)
+	Save(ctx context.Context, tx *sql.Tx, ticket *model.Ticket) (*model.Ticket, error)
+	FindById(ctx context.Context, tx *sql.Tx, id int) (*model.Ticket, error)
+	Update(ctx context.Context, tx *sql.Tx, ticket *model.Ticket) (*model.Ticket, error)
 	FindAll(ctx context.Context, tx *sql.Tx) ([]*model.Ticket, error)
 }
 
@@ -22,7 +21,7 @@ func NewTicketRepositoryImpl() *TicketRepositoryImpl {
 	return &TicketRepositoryImpl{}
 }
 
-func (t TicketRepositoryImpl) Save(ctx context.Context, tx *sql.DB, ticket *model.Ticket) (*model.Ticket, error) {
+func (t TicketRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, ticket *model.Ticket) (*model.Ticket, error) {
 	query := "INSERT INTO tickets(event_id, attendee_id) values(?, ?)"
 	result, err := tx.ExecContext(ctx, query, ticket.Event.Id, ticket.Attendee.Id)
 	if err != nil {
@@ -39,7 +38,7 @@ func (t TicketRepositoryImpl) Save(ctx context.Context, tx *sql.DB, ticket *mode
 	return ticket, nil
 }
 
-func (t TicketRepositoryImpl) FindById(ctx context.Context, tx *sql.DB, id int) (*model.Ticket, error) {
+func (t TicketRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) (*model.Ticket, error) {
 	query := `
 		SELECT 
 			t.id, t.status,
@@ -50,30 +49,31 @@ func (t TicketRepositoryImpl) FindById(ctx context.Context, tx *sql.DB, id int) 
 		JOIN attendees a ON t.attendee_id = a.id
 		WHERE t.id = ?
 	`
-
-	row := tx.QueryRowContext(ctx, query, id)
-
+	row, err := tx.QueryContext(ctx, query, id)
+	defer row.Close()
+	if err != nil {
+		return nil, err
+	}
 	ticket := model.Ticket{}
 	ticket.Event = &model.Event{}
 	ticket.Attendee = &model.Attendee{}
 
-	err := row.Scan(
-		&ticket.Id, &ticket.Status,
-		&ticket.Event.Id, &ticket.Event.Name, &ticket.Event.Description, &ticket.Event.StartTime, &ticket.Event.EndTime,
-		&ticket.Attendee.Id, &ticket.Attendee.Name, &ticket.Attendee.Email,
-	)
-
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, exception.NewNotFoundError("Ticket Not Found")
+	if row.Next() {
+		err := row.Scan(
+			&ticket.Id, &ticket.Status,
+			&ticket.Event.Id, &ticket.Event.Name, &ticket.Event.Description, &ticket.Event.StartTime, &ticket.Event.EndTime,
+			&ticket.Attendee.Id, &ticket.Attendee.Name, &ticket.Attendee.Email,
+		)
+		if err != nil {
+			return nil, err
 		}
-		return nil, err
+		return &ticket, nil
 	}
 
-	return &ticket, nil
+	return nil, exception.NewNotFoundError("Ticket Not Found")
 }
 
-func (t TicketRepositoryImpl) Update(ctx context.Context, tx *sql.DB, ticket *model.Ticket) (*model.Ticket, error) {
+func (t TicketRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, ticket *model.Ticket) (*model.Ticket, error) {
 	query := "UPDATE tickets SET status = 'canceled' WHERE id = ?"
 	_, err := tx.ExecContext(ctx, query, ticket.Id)
 	if err != nil {

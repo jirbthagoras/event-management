@@ -18,3 +18,8 @@ type AttendeeRequest struct {
 	Name  string `json:"name" validate:"required"`
 	Email string `json:"email" validate:"required,email"`
 }
+
+type TicketRequest struct {
+	EventId    int `json:"event_id" validate:"required"`
+	AttendeeId int `json:"attendee_id" validate:"required"`
+}

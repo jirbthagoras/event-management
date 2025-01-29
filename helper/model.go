@@ -49,6 +49,22 @@ func ToAttendeeResponses(attendees []*model.Attendee) []*web.AttendeeResponse {
 	return attendeeResponses
 }
 
+func ToTicketResponse(ticket *model.Ticket) *web.TicketResponse {
+	return &web.TicketResponse{
+		Id:       ticket.Id,
+		Event:    *ticket.Event,
+		Attendee: *ticket.Attendee,
+		Status:   ticket.Status,
+	}
+}
+
+func ToTicketResponses(tickets []*model.Ticket) []*web.TicketResponse {
+	var ticketResponses []*web.TicketResponse
+	for _, ticket := range tickets {
+		ticketResponses = append(ticketResponses, ToTicketResponse(ticket))
+	}
+}
+
 func CreateWebResponse(status string, data interface{}) *web.GlobalResponse {
 	return &web.GlobalResponse{
 		Status: status,

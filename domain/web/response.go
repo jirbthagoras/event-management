@@ -1,6 +1,9 @@
 package web
 
-import "time"
+import (
+	"jirbthagoras/event-management/domain/model"
+	"time"
+)
 
 type AdminResponse struct {
 	Token string `json:"token"`
@@ -24,4 +27,11 @@ type AttendeeResponse struct {
 	Id    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
+}
+
+type TicketResponse struct {
+	Id       int            `json:"id"`
+	Event    model.Event    `json:"event"`
+	Attendee model.Attendee `json:"attendee"`
+	Status   string         `json:"status"`
 }
