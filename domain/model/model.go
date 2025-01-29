@@ -24,8 +24,8 @@ type Attendee struct {
 }
 
 type Ticket struct {
-	Id      int
-	EventId int
-	UserId  int
-	Status  string
+	Id       int
+	Event    *Event
+	Attendee *Attendee
+	Status   string
 }
