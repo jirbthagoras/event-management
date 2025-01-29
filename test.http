@@ -46,3 +46,38 @@ X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
 DELETE http://localhost:3000/api/event/7
 Accept: application/json
 X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
+
+### POST create event
+POST http://localhost:3000/api/attendee
+Content-Type: application/json
+X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
+
+{
+  "name": "ali",
+  "email": "ali@alisigma.com",
+}
+
+### GET find by all
+GET http://localhost:3000/api/attendee
+ACCEPT: application/json
+X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
+
+### GET find by Id
+GET http://localhost:3000/api/attendee/2
+ACCEPT: application/json
+X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
+
+### PUT update certain row
+PUT http://localhost:3000/api/attendee/1
+Content-Type: application/json
+X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
+
+{
+  "name": "terbaruk",
+  "email": "newest@gmail.com"
+}
+
+### DELETE by id
+DELETE http://localhost:3000/api/attendee/1
+Accept: application/json
+X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
