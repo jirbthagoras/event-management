@@ -59,7 +59,7 @@ func (t TicketRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) 
 	ticket.Attendee = &model.Attendee{}
 
 	if row.Next() {
-		err := row.Scan(
+		err = row.Scan(
 			&ticket.Id, &ticket.Status,
 			&ticket.Event.Id, &ticket.Event.Name, &ticket.Event.Description, &ticket.Event.StartTime, &ticket.Event.EndTime,
 			&ticket.Attendee.Id, &ticket.Attendee.Name, &ticket.Attendee.Email,
@@ -68,6 +68,7 @@ func (t TicketRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) 
 			return nil, err
 		}
 		return &ticket, nil
+
 	}
 
 	return nil, exception.NewNotFoundError("Ticket Not Found")

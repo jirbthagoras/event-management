@@ -10,10 +10,10 @@ import (
 )
 
 type TicketController interface {
-	Create(writer http.ResponseWriter, request *http.Request)
+	Create(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 	Cancel(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 	FindById(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
-	FindAll(writer http.ResponseWriter, request *http.Request)
+	FindAll(writer http.ResponseWriter, request *http.Request, param httprouter.Params)
 }
 
 type TicketControllerImpl struct {
@@ -24,13 +24,31 @@ func NewTicketControllerImpl(ticketService service.TicketService) *TicketControl
 	return &TicketControllerImpl{TicketService: ticketService}
 }
 
-func (controller TicketControllerImpl) Create(writer http.ResponseWriter, request *http.Request) {
-	ticketRequest := &web.TicketRequest{}
-	helper.ReadFromRequestBody(request, ticketRequest)
+func (controller TicketControllerImpl) Create(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
+	var rawRequest map[string]string
+	helper.ReadFromRequestBody(request, &rawRequest)
+
+	eventId, err := strconv.Atoi(rawRequest["event_id"])
+	if err != nil {
+		helper.WriteResponseToBody(writer, http.StatusBadRequest, helper.CreateWebResponse("INVALID EVENT ID", nil))
+		return
+	}
+
+	attendeeId, err := strconv.Atoi(rawRequest["attendee_id"])
+	if err != nil {
+		helper.WriteResponseToBody(writer, http.StatusBadRequest, helper.CreateWebResponse("INVALID ATTENDEE ID", nil))
+		return
+	}
+
+	ticketRequest := &web.TicketRequest{
+		EventId:    eventId,
+		AttendeeId: attendeeId,
+	}
 
 	ticketResponse := controller.TicketService.Create(request.Context(), ticketRequest)
 
 	helper.WriteResponseToBody(writer, http.StatusCreated, helper.CreateWebResponse("CREATED", ticketResponse))
+
 }
 
 func (controller TicketControllerImpl) Cancel(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
@@ -38,9 +56,9 @@ func (controller TicketControllerImpl) Cancel(writer http.ResponseWriter, reques
 	ticketId, err := strconv.Atoi(id)
 	helper.PanicIfError(err)
 
-	ticketResponse := controller.TicketService.UpdateStatus(request.Context(), ticketId)
+	_ = controller.TicketService.UpdateStatus(request.Context(), ticketId)
 
-	helper.WriteResponseToBody(writer, http.StatusOK, helper.CreateWebResponse("CANCELED", ticketResponse))
+	helper.WriteResponseToBody(writer, http.StatusOK, helper.CreateWebResponse("CANCELED", nil))
 }
 
 func (controller TicketControllerImpl) FindById(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
@@ -53,7 +71,7 @@ func (controller TicketControllerImpl) FindById(writer http.ResponseWriter, requ
 	helper.WriteResponseToBody(writer, http.StatusOK, helper.CreateWebResponse("SUCCESS", ticketResponse))
 }
 
-func (controller TicketControllerImpl) FindAll(writer http.ResponseWriter, request *http.Request) {
+func (controller TicketControllerImpl) FindAll(writer http.ResponseWriter, request *http.Request, param httprouter.Params) {
 	ticketResponse := controller.TicketService.FindAll(request.Context())
 
 	helper.WriteResponseToBody(writer, http.StatusOK, helper.CreateWebResponse("SUCCESS", ticketResponse))

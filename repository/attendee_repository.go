@@ -59,7 +59,7 @@ func (e AttendeeRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, id int) 
 }
 
 func (e AttendeeRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) (*model.Attendee, error) {
-	query := "SELECT name, email FROM attendees WHERE id = ?"
+	query := "SELECT id, name, email FROM attendees WHERE id = ?"
 	rows, err := tx.QueryContext(ctx, query, id)
 	defer rows.Close()
 	if err != nil {

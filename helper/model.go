@@ -50,10 +50,11 @@ func ToAttendeeResponses(attendees []*model.Attendee) []*web.AttendeeResponse {
 }
 
 func ToTicketResponse(ticket *model.Ticket) *web.TicketResponse {
+
 	return &web.TicketResponse{
 		Id:       ticket.Id,
-		Event:    *ticket.Event,
-		Attendee: *ticket.Attendee,
+		Event:    ticket.Event,
+		Attendee: ticket.Attendee,
 		Status:   ticket.Status,
 	}
 }
@@ -63,6 +64,8 @@ func ToTicketResponses(tickets []*model.Ticket) []*web.TicketResponse {
 	for _, ticket := range tickets {
 		ticketResponses = append(ticketResponses, ToTicketResponse(ticket))
 	}
+
+	return ticketResponses
 }
 
 func CreateWebResponse(status string, data interface{}) *web.GlobalResponse {

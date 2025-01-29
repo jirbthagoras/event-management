@@ -19,12 +19,19 @@ type TicketService interface {
 }
 
 type TicketServiceImpl struct {
-	TicketRepository repository.TicketRepository
-	Validator        *validator.Validate
-	DB               *sql.DB
+	TicketRepository   repository.TicketRepository
+	AttendeeRepository repository.AttendeeRepository
+	EventRepository    repository.EventRepository
+	Validator          *validator.Validate
+	DB                 *sql.DB
+}
+
+func NewTicketServiceImpl(ticketRepository repository.TicketRepository, attendeeRepository repository.AttendeeRepository, eventRepository repository.EventRepository, validator *validator.Validate, DB *sql.DB) *TicketServiceImpl {
+	return &TicketServiceImpl{TicketRepository: ticketRepository, AttendeeRepository: attendeeRepository, EventRepository: eventRepository, Validator: validator, DB: DB}
 }
 
 func (service TicketServiceImpl) Create(ctx context.Context, request *web.TicketRequest) *web.TicketResponse {
+
 	err := service.Validator.StructCtx(ctx, request)
 	exception.PanicIfValidationErr(err)
 
@@ -32,11 +39,26 @@ func (service TicketServiceImpl) Create(ctx context.Context, request *web.Ticket
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	ticket := &model.Ticket{}
+	ticket := &model.Ticket{
+		Event:    &model.Event{},
+		Attendee: &model.Attendee{},
+	}
+
 	ticket.Event.Id = request.EventId
+
+	_, err = service.EventRepository.FindById(ctx, tx, ticket.Event.Id)
+	helper.PanicIfError(err)
+
 	ticket.Attendee.Id = request.AttendeeId
 
+	_, err = service.AttendeeRepository.FindById(ctx, tx, ticket.Attendee.Id)
+	helper.PanicIfError(err)
+
 	ticket, err = service.TicketRepository.Save(ctx, tx, ticket)
+	helper.PanicIfError(err)
+
+	ticket, err = service.TicketRepository.FindById(ctx, tx, ticket.Id)
+	helper.PanicIfError(err)
 
 	return helper.ToTicketResponse(ticket)
 }
@@ -46,7 +68,11 @@ func (service TicketServiceImpl) UpdateStatus(ctx context.Context, id int) *web.
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	ticket, err := service.TicketRepository.Update(ctx, tx, &model.Ticket{Id: id})
+	ticket, err := service.TicketRepository.FindById(ctx, tx, id)
+	helper.PanicIfError(err)
+
+	ticket, err = service.TicketRepository.Update(ctx, tx, &model.Ticket{Id: id})
+	helper.PanicIfError(err)
 
 	return helper.ToTicketResponse(ticket)
 }
@@ -71,8 +97,4 @@ func (service TicketServiceImpl) FindAll(ctx context.Context) []*web.TicketRespo
 	helper.PanicIfError(err)
 
 	return helper.ToTicketResponses(tickets)
-}
-
-func NewTicketServiceImpl(ticketRepository repository.TicketRepository, validator *validator.Validate, DB *sql.DB) *TicketServiceImpl {
-	return &TicketServiceImpl{TicketRepository: ticketRepository, Validator: validator, DB: DB}
 }

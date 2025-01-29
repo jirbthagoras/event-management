@@ -10,11 +10,11 @@ Content-Type: application/json
 ### POST create event
 POST http://localhost:3000/api/event
 Content-Type: application/json
-X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
+X-API-Key: 7901945a-de16-11ef-bb57-4c24ce35582e
 
 {
-  "name": "dddddd",
-  "description": "Ya sdd",
+  "name": "Event kecoak sigma",
+  "description": "Hunting Kecoak",
   "start_time": "2025-01-01",
   "end_time": "2025-01-02"
 }
@@ -33,11 +33,11 @@ X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
 ### PUT update certain row
 PUT http://localhost:3000/api/event/7
 Content-Type: application/json
-X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
+X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
 
 {
-  "name": "terbaruk",
-  "description": "kcoak",
+  "name": "Kecoak Hunting",
+  "description": "Kecoak yang menjijikkan",
   "start_time": "2025-01-01",
   "end_time": "2025-01-02"
 }
@@ -47,14 +47,14 @@ DELETE http://localhost:3000/api/event/7
 Accept: application/json
 X-API-Key: 14dd7c0a-8656-4046-81df-58eb0b0cdc5e
 
-### POST create event
+### POST create attendee
 POST http://localhost:3000/api/attendee
 Content-Type: application/json
-X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
+X-API-Key: 7901945a-de16-11ef-bb57-4c24ce35582e
 
 {
-  "name": "ali",
-  "email": "ali@alisigma.com",
+  "name": "AliKoplak",
+  "email": "ali@alisigma.com"
 }
 
 ### GET find by all
@@ -81,3 +81,28 @@ X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
 DELETE http://localhost:3000/api/attendee/1
 Accept: application/json
 X-API-Key: 8c7da5a3-9e20-441d-912f-6b251478c43f
+
+### POST create New Ticket
+POST http://localhost:3000/api/ticket
+Content-Type: application/json
+X-API-Key: 7901945a-de16-11ef-bb57-4c24ce35582e
+
+{
+  "event_id": "1",
+  "attendee_id": "1"
+}
+
+### GET find by Id
+GET http://localhost:3000/api/ticket/4
+ACCEPT: application/json
+X-API-Key: 7901945a-de16-11ef-bb57-4c24ce35582e
+
+### GET ALL
+GET http://localhost:3000/api/ticket
+ACCEPT: application/json
+X-API-Key: 7901945a-de16-11ef-bb57-4c24ce35582e
+
+### Cancel A Certain Ticket
+PUT http://localhost:3000/api/ticket/4
+ACCEPT: application/json
+X-API-Key: 7901945a-de16-11ef-bb57-4c24ce35582e

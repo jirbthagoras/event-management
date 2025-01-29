@@ -30,8 +30,8 @@ type AttendeeResponse struct {
 }
 
 type TicketResponse struct {
-	Id       int            `json:"id"`
-	Event    model.Event    `json:"event"`
-	Attendee model.Attendee `json:"attendee"`
-	Status   string         `json:"status"`
+	Id       int             `json:"id"`
+	Event    *model.Event    `json:"event"`
+	Attendee *model.Attendee `json:"attendee"`
+	Status   string          `json:"status"`
 }

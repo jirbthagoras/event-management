@@ -30,7 +30,10 @@ func InitializedServer() *http.Server {
 	attendeeRepositoryImpl := repository.NewAttendeeRepositoryImpl()
 	attendeeServiceImpl := service.NewAttendeeServiceImpl(db, validate, attendeeRepositoryImpl)
 	attendeeControllerImpl := controller.NewAttendeeControllerImpl(attendeeServiceImpl)
-	controllers := app.NewControllers(adminControllerImpl, eventControllerImpl, attendeeControllerImpl)
+	ticketRepositoryImpl := repository.NewTicketRepositoryImpl()
+	ticketServiceImpl := service.NewTicketServiceImpl(ticketRepositoryImpl, attendeeRepositoryImpl, eventRepositoryImpl, validate, db)
+	ticketControllerImpl := controller.NewTicketControllerImpl(ticketServiceImpl)
+	controllers := app.NewControllers(adminControllerImpl, eventControllerImpl, attendeeControllerImpl, ticketControllerImpl)
 	authMiddleware := middleware.NewAuthMiddleware(db, adminRepositoryImpl)
 	router := app.NewRouter(controllers, authMiddleware)
 	server := app.NewServer(router)
@@ -44,3 +47,5 @@ var adminControllerSet = wire.NewSet(repository.NewAdminRepositoryImpl, wire.Bin
 var eventControllerSet = wire.NewSet(repository.NewEventRepositoryImpl, wire.Bind(new(repository.EventRepository), new(*repository.EventRepositoryImpl)), service.NewEventServiceImpl, wire.Bind(new(service.EventService), new(*service.EventServiceImpl)), controller.NewEventControllerImpl, wire.Bind(new(controller.EventController), new(*controller.EventControllerImpl)))
 
 var attendeeControllerSet = wire.NewSet(repository.NewAttendeeRepositoryImpl, wire.Bind(new(repository.AttendeeRepository), new(*repository.AttendeeRepositoryImpl)), service.NewAttendeeServiceImpl, wire.Bind(new(service.AttendeeService), new(*service.AttendeeServiceImpl)), controller.NewAttendeeControllerImpl, wire.Bind(new(controller.AttendeeController), new(*controller.AttendeeControllerImpl)))
+
+var ticketControllerSet = wire.NewSet(repository.NewTicketRepositoryImpl, wire.Bind(new(repository.TicketRepository), new(*repository.TicketRepositoryImpl)), service.NewTicketServiceImpl, wire.Bind(new(service.TicketService), new(*service.TicketServiceImpl)), controller.NewTicketControllerImpl, wire.Bind(new(controller.TicketController), new(*controller.TicketControllerImpl)))

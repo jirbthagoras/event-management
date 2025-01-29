@@ -11,10 +11,11 @@ type Controllers struct {
 	controller.AdminController
 	controller.EventController
 	controller.AttendeeController
+	controller.TicketController
 }
 
-func NewControllers(adminController controller.AdminController, eventController controller.EventController, attendeeController controller.AttendeeController) *Controllers {
-	return &Controllers{AdminController: adminController, EventController: eventController, AttendeeController: attendeeController}
+func NewControllers(adminController controller.AdminController, eventController controller.EventController, attendeeController controller.AttendeeController, ticketController controller.TicketController) *Controllers {
+	return &Controllers{AdminController: adminController, EventController: eventController, AttendeeController: attendeeController, TicketController: ticketController}
 }
 
 func NewRouter(controllers *Controllers, middleware *middleware.AuthMiddleware) *httprouter.Router {
@@ -22,6 +23,7 @@ func NewRouter(controllers *Controllers, middleware *middleware.AuthMiddleware) 
 	registerAdminRoute(router, controllers.AdminController)
 	registerEventRoute(router, controllers.EventController, middleware)
 	registerAttendeeRoute(router, controllers.AttendeeController, middleware)
+	registerTicketRoute(router, controllers.TicketController, middleware)
 
 	router.PanicHandler = exception.ErrorHandler
 
@@ -46,4 +48,11 @@ func registerAttendeeRoute(router *httprouter.Router, attendeeController control
 	router.PUT("/api/attendee/:attendeeId", middleware.Handle(attendeeController.Update))
 	router.GET("/api/attendee/:attendeeId", middleware.Handle(attendeeController.FindById))
 	router.DELETE("/api/attendee/:attendeeId", middleware.Handle(attendeeController.Delete))
+}
+
+func registerTicketRoute(router *httprouter.Router, ticketController controller.TicketController, middleware *middleware.AuthMiddleware) {
+	router.POST("/api/ticket", middleware.Handle(ticketController.Create))
+	router.GET("/api/ticket", middleware.Handle(ticketController.FindAll))
+	router.PUT("/api/ticket/:ticketId", middleware.Handle(ticketController.Cancel))
+	router.GET("/api/ticket/:ticketId", middleware.Handle(ticketController.FindById))
 }
